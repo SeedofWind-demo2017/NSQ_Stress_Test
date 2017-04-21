@@ -1,0 +1,7 @@
+{% for item in videos %}
+<tr>
+    <td> {{item.id|add:offset_id}}</td>
+    <td>{{ item.uuid }}</td>
+    <td>{{ item.count }}</td>
+</tr>
+{% endfor %}
