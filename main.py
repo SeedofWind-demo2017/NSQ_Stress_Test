@@ -35,12 +35,12 @@ def main():
     parser.add_argument("-pcr", "--pc_ratio", action="store", type=int, default=1,
                         help="# producers/ # consumers for real-life simulation, default 1")
     parser.add_argument("-nsq", "--start_nsq", action="store_true",
-                        help="choose to start nsq for automatically, will require"
-                        "the service to be started manually otherwise"
-                        "by using python startNSQ_Service.py. We suggest start it"
-                        "manually since the message might be noisy if we start it for you here")
+                        help="choose to start nsq for automatically. This rogram requires"
+                        "the service to be started manually otherwise."
+                        "You can use python startNSQ_Service.py to start it manually."
+                        " We also suggest start it manually since the message might be noisy otherwise")
     parser.add_argument("-r", "--real_life", action="store_true",
-                        help="choose to use real-life simulation instead of"
+                        help="choose run use real-life simulation instead of"
                         "backing up the queue to start with")
 
     args = parser.parse_args()
@@ -55,8 +55,8 @@ def main():
         return
     if args.action == "runTests":
         print "Running Unittest for you my MASTER\nAll unittestcase classes are located"\
-        "in /test_dir, be sure to have a successful consumptiong "\
-        "process to ensure test_processor do its job, otherweise,"\
+        "in /test_dir, be sure to have a successful consumption "\
+        "process to ensure test_processor do its job. Otherwise,"\
          "correctness tests are skipped \n"
         commands = "python -m  unittest discover test_dir -v"
         call(commands.split())
@@ -73,17 +73,17 @@ def main():
             playproducer.generateRawData()
         except ConnectionError:
             print "you need to start NSQ first. You can either start"\
-             "that maunally or via driver\n please refer to readme"
+             "it maunally or via driver\n please refer to readme"
             return
         except Exception as e:
             print type(e)
             return
 
         if real_life:
-            msg = ", real_life edition(producing and consuming at the same time)"
+            msg = ", real_life version(producing and consuming at the same time)"
         else:
-            msg = ", back_up edition(messages statically put on queue first)"
-        print "Spining up the processor%s.\nI am utilizing %d threads" % (msg, num_threads)
+            msg = ", back_up version(messages statically put on queue first)"
+        print "Spinning up the Processor%s.\nI am utilizing %d threads" % (msg, num_threads)
         print "The update/publish interval is %s seconds" % publish_interval
         Processor.startProcessing(num_threads, publish_interval, real_life, pc_ratio)
     else:

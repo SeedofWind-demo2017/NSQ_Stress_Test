@@ -24,11 +24,11 @@ class Processor(object):
     Where the magic happens
     @attributes
     _PLAYCOUNT - the source of truth for play counts
-    _firstime - indicate weather it's first time to do a publish
+    _firstime - indicate whether it's first time to do a publish
     _lock - the lock
     _interval - the publish interval for the processor
     _PCratio - producers/consumers for real-life simulation
-    _testFileGenerated - indicate weather the testfile for unittest is generated
+    _testFileGenerated - indicate whether the testfile for unittest is generated
     """
     _PLAYCOUNT = {}
     _firsttime = True
@@ -51,10 +51,11 @@ class Processor(object):
         """
         coroutine and class method to spin up producer to produce to consumption queue
         for real-life version of simulation
+        @params
         topic - topic for the queue to produce to
         data - data to produce to the target queue
         writer - the producer
-        @#async
+        @async
         """
         yield gen.Task(writer.pub, topic, data)
 
@@ -165,7 +166,7 @@ class Processor(object):
                 cls._testFileGenerated = True
                 test_file = os.path.join(os.getcwd(), "test_dir", "UnittestSource.txt")
                 with open(test_file, 'a') as f:
-                    print "All consumed, ready for running test"
+                    print "All consumed, ready for running tests"
                     f.write(json.dumps(cls._PLAYCOUNT))
                     f.write('\n')
                     f.write(Client.export_result())
@@ -173,7 +174,7 @@ class Processor(object):
                     f.write(Client.export_stats())
             else:
                 additional_msg = "(stable run)"
-        print "%s less popular video(uuids) updated %s" % (len(to_update), additional_msg)
+        print "%s less popular videos(uuids) updated %s" % (len(to_update), additional_msg)
 
     @classmethod
     def startPublisher(cls):

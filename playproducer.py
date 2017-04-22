@@ -33,7 +33,7 @@ class PlayProducer(object):
     def datetime_to_tstamp(dt):
         """
         Convert datetime into tstamp (secs since epoch), preserving microsecond
-        precision (timetuple strips it out) static because can be use generally
+        precision (timetuple strips it out).
         """
         if dt is None:
             return None
@@ -45,7 +45,7 @@ class PlayProducer(object):
     @staticmethod
     def sampler(samples, sum_to, range_list):
         """
-        method to generate a list of n numbers given targeted sum equal to k, and each element
+        method to generate a list of n numbers that sums equal to k. Each element
         must be within speciifed range
         @params
         samples - number of samples/messages in our classes
@@ -78,7 +78,8 @@ class PlayProducer(object):
 
     def generateRawData(self):
         """
-        @return the raw messages strings ready for putting on the intiial queue
+        @return
+        the raw messages strings ready for putting on the intiial queue
         """
         uuids = [uuid.uuid1().hex for _ in xrange(self.num_videos)]
         self.nsq_delete()
@@ -108,8 +109,8 @@ class PlayProducer(object):
         c = Counter(ids)
         if self.log:
 
-            print ("set up done, %d messages for %d vidoes queued to Videos(initial)"
-                   "queue" % (self.num_total_messages, self.num_videos))
+            print ("Setup done, %d messages for %d vidoes queued to Videos(initial)"
+                   " queue" % (self.num_total_messages, self.num_videos))
             test_file = os.path.join(os.getcwd(), "test_dir", "UnittestSource.txt")
             with open(test_file, 'w+') as f:
                 f.write(json.dumps(c))
@@ -118,6 +119,9 @@ class PlayProducer(object):
 
     def nsq_publish(self, data):
         """
+        @params
+        data - the batch_data to publish
+        @side-effect
         mpub the data
         """
         url = self.post_url + self.topic
@@ -125,6 +129,7 @@ class PlayProducer(object):
 
     def nsq_delete(self):
         """
+        @side-effect
         delete given topics
         """
         url = self.delete_url + self.topic
@@ -134,7 +139,13 @@ class PlayProducer(object):
 
     def get_batchData(self, uuids, num_messages, value_range):
         """
+        @params
+        uuids - uuids that for all the messages
+        num_messages - num of messages
+        value_range - value range for each element
         get data that are ready to publishing (batched)
+        @return
+        A string represents all the batch_data want to mpub
         """
         values = PlayProducer.sampler(len(uuids), num_messages, value_range)
         assignment = dict(zip(uuids, values))
@@ -149,7 +160,10 @@ class PlayProducer(object):
 
     def publish_batchData(self, large_batchData):
         """
-        since the list is large, we cut it half to publish
+        @params
+        large_batchData - string representation of one large batch of data
+        @side-effect
+        published the large_batchData
         """
         batch_list = large_batchData.split('\n')
         batch_part1 = '\n'.join(batch_list[:self.num_total_messages / 2])

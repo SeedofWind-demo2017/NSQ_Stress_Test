@@ -3,7 +3,7 @@
 ----
 
 ### Installation
-Since i used django to implement the client and python to write the processor, it will require a little bit effort to setup the virtualenv before you can run this __exciting__ program. Everything is wrapped inside virtualenv, so i promise it will be easy enough for you to get this rolling
+Since I used Django to implement the client and python to write the processor, it will require a little bit effort to setup the virtualenv before you can run this __exciting__ program. Everything is wrapped inside virtualenv, so I promise it will be easy enough for you to get this rolling
 ###### Pre-requisites
 I will assume those packages are installed correctly already
 * Python 2.7
@@ -31,18 +31,18 @@ I will assume those packages are installed correctly already
 
     be sure to run this without sudo, so it won't mess up your global python env
     ```
-5. setup django
+5. setup Django
     ```
     You might need to set DJANGO modules by
 
     $ export DJANGO_SETTINGS_MODULE=video_distributor.settings
 
-    be sure now you at the root level of project folder
+    be sure now you are at the root level of project folder
 
     $ python video_distributor/manage.py migrate
 
     ```
-6. run client(django local) server
+6. run client(Django local) server
     ```
     $ python video_distributor/manage.py runserver
 
@@ -52,9 +52,9 @@ I will assume those packages are installed correctly already
     Starting development server at http://127.0.0.1:8000/
     Quit the server with CONTROL-C.
     ```
-7. go to the localshot address specified in the terminal and you should be able to see something like this (table will be empty)
-![alt text](https://www.dropbox.com/s/595kdzau4ntcna1/nsq_admin2.png?raw=1 "Logo Title Text 1")
-![alt text](https://www.dropbox.com/s/eigstjholw486sn/nsq_admin1.png?raw=1 "Logo Title Text 1")
+7. go to the localshot address specified in the terminal and you should be able to see something like this
+![alt text](https://www.dropbox.com/s/f3n05qqhwiiodnx/wistia_1.png?raw=1 "Logo Title Text 1")
+![alt text](https://www.dropbox.com/s/hm1g7sp4an2hc2s/wistia_2.png?raw=1 "Logo Title Text 1")
 
 
 Now you are ready to run the program
@@ -65,20 +65,20 @@ ____________________
 Before getting to the demo part, let's go through the functionalities achieved and their usages
 
 ###### Functionalities
-Achieved basic requirements and extra functionalities(marked by __etra__)
+Achieved basic requirements and extra functionalities(marked by __extra__)
 1. Simulation program can put specified number of messages(_default 10,000_) on the initial queue for specified number of videos(_default 100_) via __PlayProducer__.
-    * each message in the queue is a JSON string has a GUID video_id attribute
-    * (__extra__) each message tracks a enqueue time for pormance analysis
+    * each message in the queue is a JSON string that has a GUID video_id attribute
+    * (__extra__) each message tracks a enqueue time for performance analysis
     * (__extra__) user can specify how many messages and how many video(uuids) for the present simulation at run time
 2. Simulation Program  utilizes  __processor__ to
     * read each message off the queue, updating the play count of the respective video, and publishing the result to the client.
     * For videos with 100 less plays, their stats are published to client at real time
     * For videos with 100 or more plays, their stats are published to the client with user specified interval
-    * (__exra__) user can specify pusblish_interval at run time
+    * (__extra__) user can specify pusblish_interval at run time
     * Each time the __processor__ publishes (i.e. makes a call to) to the __client__, it can provide updated play counts for at most _20 videos_ in a single message.
     * An updated play count for a video will only be published to the client if the play count for that video has changed since it was last published.
     * (__extra__)user can run the simulation in a real-life fashion at run time where
-        * instead of all messages are initially backed up in the queue (default behavior), producer and consumer are spinned up at the same time
+        * instead of all messages are initially backed up in the queue (default behavior), producer and consumer are created at the same time
         * this is much more real-life  and gives us better idea how the processor performs
         * (__extra__) user can specify the _producer/consumer ratio_ for real-life simulation at run time
     * (__extra__) user can specify how many consumer threads to use at run time
@@ -94,9 +94,9 @@ Achieved basic requirements and extra functionalities(marked by __etra__)
 
 ###### Usage
 1. Start nsq service.
-This step __can be skipped__ if you choose to use the main driver to start nsq automatically. however, i donot suggest doing that since it will make the stdout quite noisy and messy. So follow this flow initially perhaps?
+This step __can be skipped__ if you choose to use the main driver to start nsq automatically. however, i do not suggest doing that since it will make the stdout quite noisy and messy.
 ```
-$ pytho startNSQ_Service.py
+$ python startNSQ_Service.py
 ```
 2. start the django client
     ```
@@ -107,9 +107,9 @@ $ pytho startNSQ_Service.py
     Django version 1.8, using settings 'video_distributor.settings'
     Starting development server at http://127.0.0.1:8000/
     ```
-    go to the localhost address specified in the terminal and you should be able to see something like this (table will be empty)
-    ![alt text](https://www.dropbox.com/s/595kdzau4ntcna1/nsq_admin2.png?raw=1 "Logo Title Text 1")
-    ![alt text](https://www.dropbox.com/s/eigstjholw486sn/nsq_admin1.png?raw=1 "Logo Title Text 1")
+    go to the localhost address specified in the terminal and you should be able to see something like this
+    ![alt text](https://www.dropbox.com/s/f3n05qqhwiiodnx/wistia_1.png?raw=1 "Logo Title Text 1")
+    ![alt text](https://www.dropbox.com/s/hm1g7sp4an2hc2s/wistia_2.png?raw=1 "Logo Title Text 1")
 3. Now we are ready to run the driver, you can invoke -h to see the usages function
     ```
     (wistia)  ✝  ~/Desktop/wistia  python main.py -h
@@ -182,15 +182,15 @@ This is the simulation version where all messages are backed up initially on the
 ```
 python main.py run -nm 10000
 ```
-![alt text](https://www.dropbox.com/s/ablzhpcm3w6s0a7/nsq_basic1.png?raw=1 "Logo Title Text 1")
-![alt text](https://www.dropbox.com/s/7dwxdvnkig3xr82/nsq_basic2.png?raw=1 "Logo Title Text 1")
+![alt text](https://www.dropbox.com/s/5bczfwgf7ozpoap/wistia_3.png?raw=1 "Logo Title Text 1")
+![alt text](https://www.dropbox.com/s/7ho9sg2trikzz91/wistia_4.png?raw=1 "Logo Title Text 1")
 
 *  you should observe that the PlayCounts table is updating real-time for small counts
 *  you should see very intuitive messages printed out to terminal (in a rather submissive manner)
 *  you should observe the performance measure
     * real-time consumption time is the consumption time for the most recent message consumed
     * average is the average time
-    * For the backedup version, the consumption time plot is a straight line for obvious reasons
+    * For the backed up version, the consumption time plot is a straight line for obvious reasons
 
 
 ###### UnitTest
@@ -228,12 +228,12 @@ OK
 ###### Demo
 This is the simulation where we start the producer (produce messages to the queue) and
 consumer at the same time. The way i implemented it is actually first put all messages in a dummy queue
-the a producer/consumer will take message from that queue to produce to the queue where the proccessor then consumes
+the a producer/consumer will take message from that queue to produce to the queue where the processor then consumes
 ```
 python main.py -nm 10000 -r
 ```
-![alt text](https://www.dropbox.com/s/omu7d9dpk6lyuva/nsq_real1.png?raw=1 "Logo Title Text 1")
-![alt text](https://www.dropbox.com/s/9gfqkh1is3nrklr/nsq_real2.png?raw=1 "Logo Title Text 1")
+![alt text](https://www.dropbox.com/s/g21b0dbgr50s299/wistia_5.png?raw=1 "Logo Title Text 1")
+![alt text](https://www.dropbox.com/s/fa79b5l708y2jqi/wistia_6.png?raw=1 "Logo Title Text 1")
 
 * You can observe terminal printed out useful messages(in a submissive manner) to indicate the configuration of this run
 * PlayCounts table act similar to last basic simulation
@@ -251,26 +251,26 @@ The design is fully OOP and consists of 3 parts
 * PlayProducer
     * generate messages and uuids to put into the initial NSQ queue
     * also responsible for reset queues and __client__ database (by calling client methods)
-    * This class is initializable
+    * This class cannot be instantiated
 * Processor
     * process the message from the queue
     * now if it's the real-life version simulation, processor will also spin up a producer/consumer to read Message from initial dummy queue
     and put it to the real consumption queue without any transformation
-    * keeps a Python Dictionary (as class variable) as the source of truth for playcounts
+    * keeps a Python Dictionary (as class variable) as the source of truth for play counts
     * responsible for publishing the counts to client (invoking methods on client)
-    * This class is not initializable
+    * This class cannot be instantiated
 * Client
     * This is a fairly complex implementation i have here, but i think it's nice to have a front-end app to monitor everything
     * Client consists of
-        * a django app to display counts and performance measure
-        * a class to called Client to control the django models via ORM (invoked by publishing method from Proccesor and reset from PlayProducer)
+        * a Django app to display counts and performance measure
+        * a class to called Client to control the Django models via ORM (invoked by publishing method from Processor and reset from PlayProducer)
 
 The detailed documentation can be seen in the code itself
 
 ###### Unittest
 This program is written in a fairly test-driven manner with one complication that i cannot really start the process of NSQ from a unittest in python.
 So to test the correctness of the processor (messages all consumed? counts eventually persistent?), i output a log file each time for each simulation.
-and some cases of  unittests for processor is based on that file. When the file is not populated correctly (does not contain all the json strings it requries), it
+and some cases of  unittests for processor is based on that file. When the file is not populated correctly (does not contain all the json strings it requires), it
 will skip corresponding test cases
 All the test cases classes are located in the test_dir folder.
 
@@ -279,7 +279,7 @@ All the test cases classes are located in the test_dir folder.
 *  Test PlayProducer - 1 test
 
 ###### NOTES FYI
-The Sqllite database i used is not optimized(actually terrible) for multi-threading usage. It might lock the database if you try to use too many threads. When that happens
+The Sqlite database i used is not optimized(actually terrible) for multi-threading usage. It might lock the database if you try to use too many threads. When that happens
 __Simply restart the local server__
 
 
@@ -288,7 +288,7 @@ ______________
 
 ### Post Mortem
 ###### Had fun with NSQ
-First i have to say, it's a fun project to do. I was not familiar with NSQ. It has some rather interesting design. 
+First i have to say, it's a fun project to do. I was not familiar with NSQ. It has some rather interesting design.
 compared to other brokers like RabbitMQ. Nsq is
 * designed with distributed feature in mind, this allows it to achieve rather good processing speed easily
 * very nice publish-subscribe model and thanks to this design, it seems can achieve much better availability compared to rabbit
@@ -297,12 +297,12 @@ compared to other brokers like RabbitMQ. Nsq is
 ###### Things I learnt
 * Learnt how to use NSQ
 * Had a more in-depth look at Python multi-threading. Now due to the global lock, python is not really performant when it comes to multi-threading. In this case for a global dictionary, it is automatically thread-safe. You can see i manually implemented a lock. It's just for peace of mind
-There are ways to achive a better performance in terms of multi-threading in python which i will discuss later
+There are ways to achieve a better performance in terms of multi-threading in python which i will discuss later
 
 ###### Things i would do differently & Possible Improvements
 Given the limited time i have, i am __fairly satisfied__ with what i have here. However, quite a few improvements can be done to this program
 *  Use __react/angular__ to achieve component loading at client side
-    * You might observe the django app at the client side is not too responsive, this is because under the hood it's firing off AJAX calls to update the table and charts
+    * You might observe the Django app at the client side is not too responsive, this is because under the hood it's firing off AJAX calls to update the table and charts
     * A much better way is to use something like react to update individual component via a api call to signal the database model change
 
 *  Get better multi-threading performance
