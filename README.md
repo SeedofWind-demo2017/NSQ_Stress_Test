@@ -137,12 +137,12 @@ $ python startNSQ_Service.py
       -pcr PC_RATIO, --pc_ratio PC_RATIO
                             # producers/ # consumers for real-life simulation,
                             default 1
-      -nsq, --start_nsq     choose to start nsq for automatically, will require the
-                            service to be started manually otherwise by using
-                            python startNSQ_Service.py. We suggest start
-                            it manually since the message might be noisy if we
-                            start it for you here
-      -r, --real_life       choose to use real-life simulation instead ofbacking
+      -nsq, --start_nsq     choose to start nsq for automatically. This rogram
+                            requiresthe service to be started manually
+                            otherwise.You can use python startNSQ_Service.py to
+                            start it manually. We also suggest start it manually
+                            since the message might be noisy otherwise
+      -r, --real_life       choose run use real-life simulation instead ofbacking
                             up the queue to start with
     ```
     The usage function is rather clear. Here are few examples and explanation regarding the running of the driver
