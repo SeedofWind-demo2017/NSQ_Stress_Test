@@ -23,7 +23,7 @@ I will assume those packages are installed correctly already
     $ source bin/activate
 
     Now you should see the virtualenv is activated
-    eg. (wistia)  ✝  ~/Desktop/wistia 
+    eg. (NSQ_Stress_Test)  ✝  ~/Desktop/NSQ_Stress_Test 
     ```
 4. install all packages inside virtualenv
     ```
@@ -61,38 +61,9 @@ Now you are ready to run the program
 
 ____________________
 
-### Functionalities & Usage
-Before getting to the demo part, let's go through the functionalities achieved and their usages
+###  Usage
+Before getting to the demo part, let's breifly dicuss the usages
 
-###### Functionalities
-Achieved basic requirements and extra functionalities(marked by __extra__)
-1. Simulation program can put specified number of messages(_default 10,000_) on the initial queue for specified number of videos(_default 100_) via __PlayProducer__.
-    * each message in the queue is a JSON string that has a GUID video_id attribute
-    * (__extra__) each message tracks a enqueue time for performance analysis
-    * (__extra__) user can specify how many messages and how many video(uuids) for the present simulation at run time
-2. Simulation Program  utilizes  __processor__ to
-    * read each message off the queue, updating the play count of the respective video, and publishing the result to the client.
-    * For videos with 100 less plays, their stats are published to client at real time
-    * For videos with 100 or more plays, their stats are published to the client with user specified interval
-    * (__extra__) user can specify pusblish_interval at run time
-    * Each time the __processor__ publishes (i.e. makes a call to) to the __client__, it can provide updated play counts for at most _20 videos_ in a single message.
-    * An updated play count for a video will only be published to the client if the play count for that video has changed since it was last published.
-    * (__extra__)user can run the simulation in a real-life fashion at run time where
-        * instead of all messages are initially backed up in the queue (default behavior), producer and consumer are created at the same time
-        * this is much more real-life  and gives us better idea how the processor performs
-        * (__extra__) user can specify the _producer/consumer ratio_ for real-life simulation at run time
-    * (__extra__) user can specify how many consumer threads to use at run time
-    * (__extra__) user can start the nsq service automatically via the driver program
-3. Simulation Program utilizes __client__ to
-    * Display the play counts published from __processor__
-    * (__extra__) Measure the real-time and average consumption time via dashboard
-    * (__extra__)The *client* is a very user-friendly django web-app(dashboard) to view real-time counts and performance measure
-    * (__extra__)The *client* is automatically updating counts (real-time display) except the charts (too large). You will see what i'm talking about in the demo part
-4. (__extra__) All unittests can be found in the test_dir, this program is also written in a (almost) test-driven fashion. I will discuss how to run the unittests and what it covers in a sec
-    *  The tests for processor are a bit unique since it relies on the output of a simulation. Since the NSQ control is not low-level enough for me to signal outiside of the main thread
-    * So the tests for processor should be run after a simulation. it will skip some test cases(correctness for simulation) otherwise
-
-###### Usage
 1. Start nsq service.
 This step __can be skipped__ if you choose to use the main driver to start nsq automatically. however, i do not suggest doing that since it will make the stdout quite noisy and messy.
 ```
@@ -112,7 +83,7 @@ $ python startNSQ_Service.py
     ![alt text](https://www.dropbox.com/s/hm1g7sp4an2hc2s/wistia_2.png?raw=1 "Logo Title Text 1")
 3. Now we are ready to run the driver, you can invoke -h to see the usages function
     ```
-    (wistia)  ✝  ~/Desktop/wistia  python main.py -h
+    (NSQ_Stress_Test)  ✝  ~/Desktop/NSQ_Stress_Test  python main.py -h
     usage: main.py [-h] [-nt NUM_THREADS] [-nm NUM_MESSAGES] [-nv NUM_VIDEOS]
                    [-ui UPDATE_INTERVAL] [-pcr PC_RATIO] [-nsq] [-r]
                    action
@@ -196,7 +167,7 @@ python main.py run -nm 10000
 ###### UnitTest
 you will be able to run all unittests after you see the All Consumed message from the terminal
 ```
-(wistia)  ✝  ~/Desktop/wistia  python main.py runTests
+(NSQ_Stress_Test)  ✝  ~/Desktop/NSQ_Stress_Test  python main.py runTests
 Running Unittest for you my MASTER
 All unittestcase classes are locatedin /test_dir, be sure to have a successful consumptiong process to ensure test_processor do its job, otherweise,correctness tests are skipped
 
@@ -281,32 +252,3 @@ All the test cases classes are located in the test_dir folder.
 ###### NOTES FYI
 The Sqlite database i used is not optimized(actually terrible) for multi-threading usage. It might lock the database if you try to use too many threads. When that happens
 __Simply restart the local server__
-
-
-______________
-
-
-### Post Mortem
-###### Had fun with NSQ
-First i have to say, it's a fun project to do. I was not familiar with NSQ. It has some rather interesting design.
-compared to other brokers like RabbitMQ. Nsq is
-* designed with distributed feature in mind, this allows it to achieve rather good processing speed easily
-* very nice publish-subscribe model and thanks to this design, it seems can achieve much better availability compared to rabbit
-* ridiculously easy to setup
-* The only thing i might __complain__ is the Python library is not really low-level enough
-###### Things I learnt
-* Learnt how to use NSQ
-* Had a more in-depth look at Python multi-threading. Now due to the global lock, python is not really performant when it comes to multi-threading. In this case for a global dictionary, it is automatically thread-safe. You can see i manually implemented a lock. It's just for peace of mind
-There are ways to achieve a better performance in terms of multi-threading in python which i will discuss later
-
-###### Things i would do differently & Possible Improvements
-Given the limited time i have, i am __fairly satisfied__ with what i have here. However, quite a few improvements can be done to this program
-*  Use __react/angular__ to achieve component loading at client side
-    * You might observe the Django app at the client side is not too responsive, this is because under the hood it's firing off AJAX calls to update the table and charts
-    * A much better way is to use something like react to update individual component via a api call to signal the database model change
-
-*  Get better multi-threading performance
-    * Like i mentioned, it's not really performant to run multi-threading due to the global interpreter lock
-    * One option is to use a different implementation of Python, like Jython or IronPython. That way, you still get the benefits of having the Python language without having to deal with the GIL. However, you wouldn't have the ability to use the CPython-only libraries.
-
-*  This is __far beyond the scope__, but it will be extra fun to make it more real-life. That is to host NSQ on server(s) and simulate a real Async Task processing workflow. NSQ is optimized for multi-node processing. So this is the only one to do it a solid
